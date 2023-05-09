@@ -65,6 +65,10 @@ jobs:
           cd bktel
           composer require laravel/sail --dev --ignore-platform-reqs
           php artisan sail:install
+      - name: set permission runner
+        run: sudo chmod -R a+u+x .
+      - name: run container
+        run: |
           sudo docker compose down
           sudo docker compose up -d
       - name: run on production
@@ -78,7 +82,7 @@ jobs:
           sudo chmod -R ugo+rw storage
       - name: run seeder
         run: |
-          sudo docker exec -it bktel-laravel.test-1 bash
+          sudo docker exec -ti bktel-laravel.test-1 bash
           php artisan migrate
           php artisan db:seed --class=DatabaseSeeder
           exit
