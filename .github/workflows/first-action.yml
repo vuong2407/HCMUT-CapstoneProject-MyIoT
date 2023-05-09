@@ -42,8 +42,6 @@ jobs:
           node-version: "18.15.0"
       - name: Checkout code to runner
         uses: actions/checkout@v3
-        with:
-          ssh-key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCtuffygSjTLOxIf0jjplWZlaIp34OKJkyNV010+w08OoeWgr631ArGZmBQ5ECBUFYG6TxwkW8G7hdwiYvpFPRL9F/byDgmDMzgqppEs/vowqsn53bnHU0iyUn2gvw3lxsMVe1TazZEvKAbC+Tv8TJJ7HI0lMNXo2oV67kih1nqQwnFP1ijAjD4YiaXhfuNiBqL2QD6irAmlochXNWnul39Dy/Kwg1ZHop+Uu4t9meyMr8z8yOc6kS6/UOO/slmlf1j+PnySCARgjHE4vbHtMI6V2ZdtfjOiIMXh1PEFRYjJ9iC3CKvRgAzDP6RDZMtu2H4sSgMftXkld/NfBcPa5LpgnTp2L9+FcbqQ7y085tHicXpnIjxq/ZZvfaxK1SfuehyqMwbvDkKEnWFsSAQzqxKNPF+1yMnF7mH//UxXqnRzQXtNfQgT/q5UYXhCqz1z12iP/ILcz/u9jNJTY3Miep8NV+9EwxZgNO0W9YpJ6QpsehWClg+m5AJ9zuupsrWTuM= vuongnguyen@newrepo
       - name: install JS dependencies
         run: |
           cd bktel
