@@ -83,4 +83,5 @@ jobs:
           sudo chmod -R ugo+rw storage
       - name: run seeder
         run: |
+          cd bktel
           php artisan migrate
