@@ -52,8 +52,6 @@ jobs:
           node-version: "18.15.0" 
       - name: Checkout code to runner
         uses: actions/checkout@v3
-        with:
-          persist-credentials: true
       - name: install JS dependencies
         run: |
           cd bktel
@@ -80,6 +78,7 @@ jobs:
           sudo chmod -R ugo+rw storage
       - name: run seeder
         run: |
-          cd bktel
+          sudo docker exec -it bktel-laravel.test-1 bash
           php artisan migrate
           php artisan db:seed --class=DatabaseSeeder
+          exit
