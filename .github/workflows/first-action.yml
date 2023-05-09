@@ -49,12 +49,13 @@ jobs:
       - name: Install Nodejs for runner
         uses: actions/setup-node@v3
         with:
+          persist-credentials: true
+        with:
           node-version: "18.15.0"
       - name: Checkout code to runner
         uses: actions/checkout@v3
       - name: install JS dependencies
         run: |
-          sudo chmod -R a+u+x .
           cd bktel
           npm ci
       - name: install php dependencies
