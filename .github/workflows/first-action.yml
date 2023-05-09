@@ -66,3 +66,9 @@ jobs:
           cd bktel
           sudo chmod -R 775 storage
           sudo chmod -R ugo+rw storage
+      - name: run seeder
+        run: |
+          cd bktel
+          php artisan migrate
+          php artisan db:seed
+          php artisan db:seed --class=DatabaseSeeder
