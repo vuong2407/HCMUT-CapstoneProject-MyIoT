@@ -1,0 +1,67 @@
+name: Deployment Workflow
+on: workflow_dispatch
+jobs:
+  Deploy-on-VM:
+    runs-on: self-hosted
+    steps:
+      - name: Print Greeting
+        run: echo "Hello World"
+      - name: Check version php > 8.1
+        run: |
+          phpVersion=$(php -v | head -n 1 | cut -d " " -f 2 | cut -d "." -f 1,2)
+          if [[ "$(echo "$phpVersion >= 8.1" | bc)" -ne 1 ]]; then 
+            echo "<8.1";
+            sudo apt update
+            sudo apt upgrade -y
+            sudo apt install -y software-properties-common
+            sudo add-apt-repository ppa:ondrej/php
+            sudo apt update
+            sudo apt install -y php8.1
+            sudo apt install php8.1-common php8.1-mysql php8.1-xml php8.1-xmlrpc php8.1-curl php8.1-gd php8.1-imagick php8.1-cli php8.1-dev php8.1-imap php8.1-mbstring php8.1-opcache php8.1-soap php8.1-zip php8.1-redis php8.1-intl -y 
+          else 
+            echo ">8.1";
+          fi
+      - name: check Docker and Docker Compose is available
+        run: |
+          if ! command -v docker &> /dev/null; then
+            sudo apt-get update
+            sudo apt-get install ca-certificates curl gnupg
+            sudo install -m 0755 -d /etc/apt/keyrings
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+            sudo chmod a+r /etc/apt/keyrings/docker.gpg
+            echo \
+            "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+            "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+            sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+            sudo apt-get update
+            sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+            fi
+      - name: Install Nodejs for runner
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.15.0"
+      - name: Checkout code to runner
+        uses: actions/checkout@v3
+      - name: install JS dependencies
+        run: |
+          cd bktel
+          npm ci
+      - name: install php dependencies
+        run: |
+          cd bktel
+          composer i --ignore-platform-reqs
+      - name: Building Project
+        run: |
+          cd bktel
+          composer require laravel/sail --dev --ignore-platform-reqs
+          php artisan sail:install
+          sudo docker compose down
+          sudo docker compose up -d
+      - name: run on production
+        run: |
+          cd bktel
+          sudo npm run production
+      - name: set permission for storage
+        run: |
+          sudo chmod -R 775 storage
+          sudo chmod -R ugo+rw storage
