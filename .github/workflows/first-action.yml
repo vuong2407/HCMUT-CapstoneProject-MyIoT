@@ -63,5 +63,6 @@ jobs:
           sudo npm run production
       - name: set permission for storage
         run: |
+          cd bktel
           sudo chmod -R 775 storage
           sudo chmod -R ugo+rw storage
