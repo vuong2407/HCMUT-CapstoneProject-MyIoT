@@ -83,7 +83,4 @@ jobs:
           sudo chmod -R ugo+rw storage
       - name: run seeder
         run: |
-          sudo docker exec -ti bktel-laravel.test-1 bash
           php artisan migrate
-          php artisan db:seed --class=DatabaseSeeder
-          exit
