@@ -36,6 +36,16 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
             fi
+      - name: check MySQL is available
+        run: |
+          if command -v mysql >/dev/null 2>&1 ; then
+            echo "MySQL is already installed."
+          else
+            echo "MySQL is not installed. Installing now..."
+            sudo apt-get update
+            sudo apt-get install mysql-server -y
+            echo "MySQL has been installed."
+          fi
       - name: Install Nodejs for runner
         uses: actions/setup-node@v3
         with:
@@ -44,6 +54,7 @@ jobs:
         uses: actions/checkout@v3
       - name: install JS dependencies
         run: |
+          sudo chmod -R a+u+x .
           cd bktel
           npm ci
       - name: install php dependencies
